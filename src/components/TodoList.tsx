@@ -1,7 +1,15 @@
 import { useTodoContext } from "../context/TodoContext";
 
 export default function TodoList() {
-  const { todo } = useTodoContext();
+  const { todo, setTodo } = useTodoContext();
+
+  function toggleStatus(index: number) {
+    setTodo((prev) =>
+      prev.map((item, i) =>
+        i === index ? { ...item, completed: !item.completed } : item
+      )
+    );
+  }
 
   return (
     <div>
@@ -14,7 +22,12 @@ export default function TodoList() {
           } rounded-lg my-3 py-2 px-5`}
           key={index}
         >
-          {item.todo}
+          <input
+            type="checkbox"
+            checked={item.completed}
+            onChange={() => toggleStatus(index)}
+          />
+          <span>{item.todo}</span>
         </div>
       ))}
     </div>

@@ -4,6 +4,7 @@ export default function Search() {
   return (
     <div className="relative flex-1">
       <input
+        type="text"
         className="w-full rounded-full border py-2 pl-10 pr-3"
         placeholder="Search"
       />
