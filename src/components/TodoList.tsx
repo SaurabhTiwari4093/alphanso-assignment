@@ -1,22 +1,11 @@
-const todoData = [
-  {
-    todo: "Brush Teeth",
-    completed: true,
-  },
-  {
-    todo: "Buy Grocery",
-    completed: true,
-  },
-  {
-    todo: "Buy Grocery",
-    completed: false,
-  },
-];
+import { useTodoContext } from "../context/TodoContext";
 
 export default function TodoList() {
+  const { todo } = useTodoContext();
+
   return (
     <div>
-      {todoData.map((item, index) => (
+      {todo.map((item, index) => (
         <div
           className={`border ${
             item.completed
