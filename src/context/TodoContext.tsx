@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 
 interface Todo {
   todo: string;
@@ -17,12 +23,28 @@ interface TodoContextType {
   setSearchQuery: any;
 }
 
+const defaultTodo = [
+  { todo: "Brush Teeth", completed: true, id: 1 },
+  { todo: "Buy Grocery", completed: true, id: 2 },
+  { todo: "Pay Rent", completed: false, id: 3 },
+];
+
+function getLocalTodo() {
+  try {
+    const localTodo = localStorage.getItem("todo");
+    if (localTodo) {
+      return JSON.parse(localTodo);
+    } else {
+      return defaultTodo;
+    }
+  } catch (error) {
+    console.log("Error: ", error);
+    return defaultTodo;
+  }
+}
+
 const defaultTodoContextValue: TodoContextType = {
-  todo: [
-    { todo: "Brush Teeth", completed: true, id: 1 },
-    { todo: "Buy Grocery", completed: true, id: 2 },
-    { todo: "Pay Rent", completed: false, id: 3 },
-  ],
+  todo: getLocalTodo(),
   setTodo: () => {},
   nextId: 4,
   setNextId: () => {},
@@ -45,6 +67,10 @@ export const TodoProvider = ({ children }: Props) => {
   const [searchQuery, setSearchQuery] = useState<string>(
     defaultTodoContextValue.searchQuery
   );
+
+  useEffect(() => {
+    localStorage.setItem("todo", JSON.stringify(todo));
+  }, [todo]);
 
   return (
     <TodoContext.Provider
