@@ -6,13 +6,14 @@ export default function AddTodo() {
   const [todoItem, setTodoItem] = useState<string>("");
 
   function addTodoToList() {
-    if (todoItem.trim() === "") {
+    const trimItem = todoItem.trim();
+    if (!trimItem) {
       alert("Empty task not allowed");
       return;
     }
     setTodo((prev) => [
       ...prev,
-      { todo: todoItem, completed: false, id: nextId },
+      { todo: trimItem, completed: false, id: nextId },
     ]);
     setNextId((prev) => prev + 1);
     setTodoItem("");

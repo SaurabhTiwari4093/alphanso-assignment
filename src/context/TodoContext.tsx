@@ -13,6 +13,8 @@ interface TodoContextType {
   setNextId: any;
   filter: string;
   setFilter: any;
+  searchQuery: string;
+  setSearchQuery: any;
 }
 
 const defaultTodoContextValue: TodoContextType = {
@@ -26,6 +28,8 @@ const defaultTodoContextValue: TodoContextType = {
   setNextId: () => {},
   filter: "All",
   setFilter: () => {},
+  searchQuery: "",
+  setSearchQuery: () => {},
 };
 
 const TodoContext = createContext<TodoContextType>(defaultTodoContextValue);
@@ -38,10 +42,22 @@ export const TodoProvider = ({ children }: Props) => {
   const [todo, setTodo] = useState<Todo[]>(defaultTodoContextValue.todo);
   const [nextId, setNextId] = useState<number>(defaultTodoContextValue.nextId);
   const [filter, setFilter] = useState<string>(defaultTodoContextValue.filter);
+  const [searchQuery, setSearchQuery] = useState<string>(
+    defaultTodoContextValue.searchQuery
+  );
 
   return (
     <TodoContext.Provider
-      value={{ todo, setTodo, nextId, setNextId, filter, setFilter }}
+      value={{
+        todo,
+        setTodo,
+        nextId,
+        setNextId,
+        filter,
+        setFilter,
+        searchQuery,
+        setSearchQuery,
+      }}
     >
       {children}
     </TodoContext.Provider>

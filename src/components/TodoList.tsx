@@ -9,7 +9,7 @@ interface Todo {
 }
 
 export default function TodoList() {
-  const { todo, setTodo, filter } = useTodoContext();
+  const { todo, setTodo, filter, searchQuery } = useTodoContext();
   const [filteredTodo, setFilteredTodo] = useState<Todo[]>([]);
 
   function toggleStatus(itemId: number) {
@@ -25,14 +25,22 @@ export default function TodoList() {
   }
 
   useEffect(() => {
+    let todos = todo;
+
     if (filter === "Completed") {
-      setFilteredTodo(todo.filter((item) => item.completed));
+      todos = todos.filter((item) => item.completed);
     } else if (filter === "Incomplete") {
-      setFilteredTodo(todo.filter((item) => !item.completed));
-    } else {
-      setFilteredTodo(todo);
+      todos = todos.filter((item) => !item.completed);
     }
-  }, [filter, todo]);
+
+    if (searchQuery) {
+      todos = todos.filter((item) =>
+        item.todo.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    setFilteredTodo(todos);
+  }, [filter, todo, searchQuery]);
 
   return (
     <div>
