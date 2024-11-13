@@ -1,8 +1,16 @@
+import { useState, useEffect } from "react";
 import { CrossIcon } from "../assets/icons";
 import { useTodoContext } from "../context/TodoContext";
 
+interface Todo {
+  todo: string;
+  completed: boolean;
+  id: number;
+}
+
 export default function TodoList() {
-  const { todo, setTodo } = useTodoContext();
+  const { todo, setTodo, filter } = useTodoContext();
+  const [filteredTodo, setFilteredTodo] = useState<Todo[]>([]);
 
   function toggleStatus(itemId: number) {
     setTodo((prev) =>
@@ -16,16 +24,26 @@ export default function TodoList() {
     setTodo((prev) => prev.filter((item) => item.id !== itemId));
   }
 
+  useEffect(() => {
+    if (filter === "Completed") {
+      setFilteredTodo(todo.filter((item) => item.completed));
+    } else if (filter === "Incomplete") {
+      setFilteredTodo(todo.filter((item) => !item.completed));
+    } else {
+      setFilteredTodo(todo);
+    }
+  }, [filter, todo]);
+
   return (
     <div>
-      {todo.map((item, index) => (
+      {filteredTodo.map((item) => (
         <div
           className={`border ${
             item.completed
               ? "border-green-300 bg-green-50"
               : "border-gray-300 bg-gray-50"
           } rounded-lg my-3 py-2 px-5 flex justify-between items-center`}
-          key={index}
+          key={item.id}
         >
           <div className="flex gap-2 items-center">
             <input
