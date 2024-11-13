@@ -9,20 +9,9 @@ interface Todo {
 }
 
 export default function TodoList() {
-  const { todo, setTodo, filter, searchQuery } = useTodoContext();
+  const { todo, deleteTodo, toggleStatus, filter, searchQuery } =
+    useTodoContext();
   const [filteredTodo, setFilteredTodo] = useState<Todo[]>([]);
-
-  function toggleStatus(itemId: number) {
-    setTodo((prev) =>
-      prev.map((item) =>
-        item.id === itemId ? { ...item, completed: !item.completed } : item
-      )
-    );
-  }
-
-  function deleteTodo(itemId: number) {
-    setTodo((prev) => prev.filter((item) => item.id !== itemId));
-  }
 
   useEffect(() => {
     let todos = todo;

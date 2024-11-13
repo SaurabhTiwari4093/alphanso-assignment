@@ -2,22 +2,18 @@ import { useState } from "react";
 import { useTodoContext } from "../context/TodoContext";
 
 export default function AddTodo() {
-  const { nextId, setNextId, setTodo } = useTodoContext();
+  const { addTodo } = useTodoContext();
   const [todoItem, setTodoItem] = useState<string>("");
 
-  function addTodoToList() {
+  const addTodoToList = () => {
     const trimItem = todoItem.trim();
     if (!trimItem) {
       alert("Empty task not allowed");
       return;
     }
-    setTodo((prev) => [
-      ...prev,
-      { todo: trimItem, completed: false, id: nextId },
-    ]);
-    setNextId((prev) => prev + 1);
+    addTodo(trimItem);
     setTodoItem("");
-  }
+  };
 
   return (
     <div>
