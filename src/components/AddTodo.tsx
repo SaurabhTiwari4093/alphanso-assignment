@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTodoContext } from "../context/TodoContext";
 
 export default function AddTodo() {
-  const { setTodo } = useTodoContext();
+  const { nextId, setNextId, setTodo } = useTodoContext();
   const [todoItem, setTodoItem] = useState<string>("");
 
   function addTodoToList() {
@@ -10,7 +10,11 @@ export default function AddTodo() {
       alert("Empty task not allowed");
       return;
     }
-    setTodo((prev) => [...prev, { todo: todoItem, completed: false }]);
+    setTodo((prev) => [
+      ...prev,
+      { todo: todoItem, completed: false, id: nextId },
+    ]);
+    setNextId((prev) => prev + 1);
     setTodoItem("");
   }
 

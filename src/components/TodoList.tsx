@@ -4,16 +4,16 @@ import { useTodoContext } from "../context/TodoContext";
 export default function TodoList() {
   const { todo, setTodo } = useTodoContext();
 
-  function toggleStatus(index: number) {
+  function toggleStatus(itemId: number) {
     setTodo((prev) =>
-      prev.map((item, i) =>
-        i === index ? { ...item, completed: !item.completed } : item
+      prev.map((item) =>
+        item.id === itemId ? { ...item, completed: !item.completed } : item
       )
     );
   }
 
-  function deleteTodo(index: number) {
-    setTodo((prev) => prev.filter((_, i) => i !== index));
+  function deleteTodo(itemId: number) {
+    setTodo((prev) => prev.filter((item) => item.id !== itemId));
   }
 
   return (
@@ -31,12 +31,12 @@ export default function TodoList() {
             <input
               type="checkbox"
               checked={item.completed}
-              onChange={() => toggleStatus(index)}
+              onChange={() => toggleStatus(item.id)}
               className="w-4 h-4 cursor-pointer accent-green-300"
             />
             <span>{item.todo}</span>
           </div>
-          <button onClick={() => deleteTodo(index)}>
+          <button onClick={() => deleteTodo(item.id)}>
             <CrossIcon className="h-5 w-5 text-gray-400 hover:text-gray-700" />
           </button>
         </div>
