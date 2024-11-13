@@ -21,6 +21,8 @@ interface TodoContextType {
   setFilter: any;
   searchQuery: string;
   setSearchQuery: any;
+  undo: any;
+  redo: any;
 }
 
 const defaultTodo = [
@@ -52,6 +54,8 @@ const defaultTodoContextValue: TodoContextType = {
   setFilter: () => {},
   searchQuery: "",
   setSearchQuery: () => {},
+  undo: () => {},
+  redo: () => {},
 };
 
 const TodoContext = createContext<TodoContextType>(defaultTodoContextValue);
@@ -67,6 +71,32 @@ export const TodoProvider = ({ children }: Props) => {
   const [searchQuery, setSearchQuery] = useState<string>(
     defaultTodoContextValue.searchQuery
   );
+  const [undoStack, setUndoStack] = useState<Todo[][]>([]);
+  const [redoStack, setRedoStack] = useState<Todo[][]>([]);
+
+  function handleTodoChange(newTodo: Todo[]) {
+    setUndoStack((prev) => [...prev, todo]);
+    setRedoStack([]);
+    setTodo(newTodo);
+  }
+
+  function undo() {
+    if (undoStack.length > 0) {
+      const previousTodo = undoStack[undoStack.length - 1];
+      setRedoStack((prev) => [todo, ...prev]);
+      setTodo(previousTodo);
+      setUndoStack(undoStack.slice(0, undoStack.length - 1));
+    }
+  }
+
+  function redo() {
+    if (redoStack.length > 0) {
+      const nextTodo = redoStack[0];
+      setUndoStack((prev) => [...prev, todo]);
+      setTodo(nextTodo);
+      setRedoStack(redoStack.slice(1));
+    }
+  }
 
   useEffect(() => {
     localStorage.setItem("todo", JSON.stringify(todo));
@@ -76,13 +106,15 @@ export const TodoProvider = ({ children }: Props) => {
     <TodoContext.Provider
       value={{
         todo,
-        setTodo,
+        setTodo: handleTodoChange,
         nextId,
         setNextId,
         filter,
         setFilter,
         searchQuery,
         setSearchQuery,
+        undo,
+        redo,
       }}
     >
       {children}
